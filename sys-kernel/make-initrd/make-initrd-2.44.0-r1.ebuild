@@ -15,7 +15,7 @@ if [[ ${PV} == 9999 ]]; then
 else
 	BUSYBOX_PV=1.35.0
 	SRC_URI="https://github.com/osboot/make-initrd/releases/download/${PV}/${P}.tar.xz"
-	KEYWORDS="~amd64"
+	KEYWORDS="amd64"
 fi
 
 LICENSE="GPL-3+"
