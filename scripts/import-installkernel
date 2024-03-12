@@ -1,0 +1,46 @@
+#!/bin/sh -eux
+
+: "${GENTOO_DIR:=/var/db/repos/gentoo}"
+
+catrgory=sys-kernel
+pn=installkernel
+pkg="$catrgory/$pn"
+patch_dir="${0%/*}/$pn"
+
+[ -d "$GENTOO_DIR/$pkg" ]
+
+for efile in "$GENTOO_DIR/$pkg"/*.ebuild; do
+	[ -s "$efile" ] || exit 1
+	fname="${efile##*/}"
+	[ -s "$patch_dir/$fname".patch ]
+done
+
+mkdir -p "$pkg"
+find "$pkg" -name '*.ebuild' -delete
+
+for efile in "$GENTOO_DIR/$pkg"/*.ebuild; do
+	[ -s "$efile" ] || exit 1
+	fname="${efile##*/}"
+	version="${fname%.ebuild}"
+	version="${version#"$pn"-}"
+	newversion="$version-r1"
+	case "$version" in
+		*-r[0-9])
+			rev="${version#*-r}"
+			version="${version%-r*}"
+			rev="$((rev + 1))"
+			newversion="$version-r$rev"
+			;;
+		*)
+			;;
+	esac
+	cp "$efile" -t "$pkg"/
+	patch --merge --no-backup-if-mismatch "$pkg/$fname" < "$patch_dir/$fname".patch
+done
+
+cp "$GENTOO_DIR/$pkg"/Manifest -t "$pkg"/
+cp "$GENTOO_DIR/$pkg"/metadata.xml -t "$pkg"/
+
+patch --merge --no-backup-if-mismatch "$pkg"/metadata.xml < "$patch_dir"/metadata.patch
+
+git add "$pkg"
