@@ -123,5 +123,5 @@ src_install() {
 	exeinto /usr/lib/kernel/install.d
 	# This module is based on 50-dracut.install script from
 	# sys-kernel/dracut-060_pre20240104-r3 package.
-	doexe "${FILESDIR}"/50-make-initrd.install
+	newexe "${FILESDIR}"/systemd-make-initrd.install 50-make-initrd.install
 }
