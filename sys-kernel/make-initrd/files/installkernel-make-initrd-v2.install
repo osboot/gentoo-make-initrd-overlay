@@ -38,12 +38,22 @@ main() {
 
 	[[ ${EUID} -eq 0 ]] || die "Please run this script as root"
 
+	kconfig=
+	kconfig_lib=/lib/modules/"$ver"/source/.config
+
+	if [ -s "$kconfig_lib" ]; then
+		kconfig="$kconfig_lib"
+	else
+		die "could't find kernel config (tried $kconfig_lib)"
+	fi
+
 	# To get rid of portage FEATURES.
 	unset FEATURES
 
 	make-initrd \
 		--verbose \
 		--kernel "$ver" \
+		${kconfig:+KERNEL_CONFIG="$kconfig"} \
 		IMAGEFILE="$initrd" ||
 		die "Failed to generate initramfs"
 }

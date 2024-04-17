@@ -65,6 +65,15 @@ case "$COMMAND" in
                 && exit 0
         fi
 
+	kconfig=
+	kconfig_lib=/lib/modules/"$KERNEL_VERSION"/source/.config
+
+	if [ -s "$kconfig_lib" ]; then
+		kconfig="$kconfig_lib"
+	else
+		die "could't find kernel config (tried $kconfig_lib)"
+	fi
+
 	# To get rid of portage FEATURES.
 	unset FEATURES
 
@@ -72,6 +81,7 @@ case "$COMMAND" in
         make-initrd \
             $([[ $KERNEL_INSTALL_VERBOSE == 1 ]] && echo --verbose) \
             --kernel "$KERNEL_VERSION" \
+	    ${kconfig:+KERNEL_CONFIG="$kconfig"} \
             IMAGEFILE="$BOOT_DIR_ABS/$IMAGE"
         ret=$?
         ;;
