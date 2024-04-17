@@ -12,7 +12,6 @@ ver=${1}
 img=${2}
 basedir=$(dirname "${img}")
 initrd="${basedir}/initrd"
-tmp="${basedir}/dracut-tmp"
 
 # familiar helpers, we intentionally don't use Gentoo functions.sh
 die() {
