@@ -38,6 +38,9 @@ main() {
 
 	[[ ${EUID} -eq 0 ]] || die "Please run this script as root"
 
+	# To get rid of portage FEATURES.
+	unset FEATURES
+
 	make-initrd \
 		--verbose \
 		--kernel "$ver" \

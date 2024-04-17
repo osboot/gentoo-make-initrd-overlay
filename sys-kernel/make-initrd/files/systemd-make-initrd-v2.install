@@ -65,6 +65,9 @@ case "$COMMAND" in
                 && exit 0
         fi
 
+	# To get rid of portage FEATURES.
+	unset FEATURES
+
         # shellcheck disable=SC2046
         make-initrd \
             $([[ $KERNEL_INSTALL_VERBOSE == 1 ]] && echo --verbose) \
