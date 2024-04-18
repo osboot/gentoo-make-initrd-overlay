@@ -13,7 +13,6 @@ if [[ ${PV} == 9999 ]]; then
 	inherit git-r3
 	EGIT_REPO_URI="https://github.com/osboot/${PN}.git"
 else
-	BUSYBOX_PV=1.35.0
 	SRC_URI="https://github.com/osboot/make-initrd/releases/download/${PV}/${P}.tar.xz"
 	KEYWORDS="~amd64"
 fi
