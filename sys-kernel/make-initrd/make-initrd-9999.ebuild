@@ -25,47 +25,47 @@ IUSE="+zlib bzip2 lzma zstd +man bootconfig +ucode plymouth lvm luks multipath m
 DEPEND="
 	app-alternatives/cpio
 	app-arch/tar
+	dev-build/make
+	dev-libs/elfutils
 	dev-libs/libshell
+	net-libs/libtirpc
 	sys-apps/coreutils
 	sys-apps/findutils
 	sys-apps/grep
 	sys-apps/kmod
 	sys-apps/util-linux
-	dev-build/make
-	dev-libs/elfutils
 	virtual/udev
-	net-libs/libtirpc
-	zlib? ( sys-libs/zlib )
-	bzip2? ( app-arch/bzip2 )
-	lzma? ( app-arch/xz-utils )
-	zstd? ( app-arch/zstd )
-	man? ( app-text/scdoc )
 	bootconfig? ( dev-util/bootconfig )
-	ucode? (
-		sys-apps/iucode_tool
-		sys-kernel/linux-firmware
-		sys-firmware/intel-microcode
-	)
-	plymouth? ( sys-boot/plymouth )
-	lvm? ( sys-fs/lvm2 )
-	luks? ( sys-fs/cryptsetup )
-	multipath? ( sys-fs/multipath-tools )
-	mdadm? ( sys-fs/mdadm )
+	bzip2? ( app-arch/bzip2 )
 	iscsi? ( sys-block/open-iscsi )
-	sshfs? ( net-fs/sshfs )
+	luks? ( sys-fs/cryptsetup )
+	lvm? ( sys-fs/lvm2 )
+	lzma? ( app-arch/xz-utils )
+	man? ( app-text/scdoc )
+	mdadm? ( sys-fs/mdadm )
+	multipath? ( sys-fs/multipath-tools )
+	plymouth? ( sys-boot/plymouth )
 	smartcard? (
 		dev-libs/opensc
 		sys-apps/pcsc-lite
 		sys-apps/pcsc-tools
 	)
+	sshfs? ( net-fs/sshfs )
+	ucode? (
+		sys-apps/iucode_tool
+		sys-kernel/linux-firmware
+		sys-firmware/intel-microcode
+	)
 	zfs? ( sys-fs/zfs )
+	zlib? ( sys-libs/zlib )
+	zstd? ( app-arch/zstd )
 "
 RDEPEND="${DEPEND}"
 
 BDEPEND="
-	dev-util/intltool
 	dev-build/autoconf
 	dev-build/automake
+	dev-util/intltool
 	sys-devel/bison
 	sys-devel/flex
 	virtual/pkgconfig
