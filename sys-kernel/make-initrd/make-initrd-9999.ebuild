@@ -23,6 +23,7 @@ SLOT="0"
 IUSE="+zlib bzip2 lzma zstd +man bootconfig +ucode plymouth lvm luks multipath mdadm iscsi sshfs smartcard zfs"
 
 DEPEND="
+	app-alternatives/cpio
 	app-arch/tar
 	dev-libs/libshell
 	sys-apps/coreutils
