@@ -4,7 +4,7 @@
 
 EAPI=8
 
-inherit autotools multilib
+inherit autotools multilib optfeature
 
 DESCRIPTION="Uevent-driven initramfs infrastructure based around udev"
 HOMEPAGE="https://github.com/osboot/make-initrd"
@@ -19,7 +19,7 @@ fi
 
 LICENSE="GPL-3+"
 SLOT="0"
-IUSE="+zlib bzip2 lzma zstd +man bootconfig +ucode plymouth lvm luks multipath mdadm iscsi sshfs smartcard zfs"
+IUSE="+zlib bzip2 lzma zstd +man"
 
 DEPEND="
 	app-alternatives/cpio
@@ -35,28 +35,9 @@ DEPEND="
 	sys-apps/util-linux
 	virtual/libcrypt:=
 	virtual/udev
-	bootconfig? ( dev-util/bootconfig )
 	bzip2? ( app-arch/bzip2 )
-	iscsi? ( sys-block/open-iscsi )
-	luks? ( sys-fs/cryptsetup )
-	lvm? ( sys-fs/lvm2 )
 	lzma? ( app-arch/xz-utils )
 	man? ( app-text/scdoc )
-	mdadm? ( sys-fs/mdadm )
-	multipath? ( sys-fs/multipath-tools )
-	plymouth? ( sys-boot/plymouth )
-	smartcard? (
-		dev-libs/opensc
-		sys-apps/pcsc-lite
-		sys-apps/pcsc-tools
-	)
-	sshfs? ( net-fs/sshfs )
-	ucode? (
-		sys-apps/iucode_tool
-		sys-kernel/linux-firmware
-		sys-firmware/intel-microcode
-	)
-	zfs? ( sys-fs/zfs )
 	zlib? ( sys-libs/zlib )
 	zstd? ( app-arch/zstd )
 "
@@ -107,20 +88,6 @@ src_install() {
 
 	rm -vr -- "$projdir/features/guestfs"
 
-	for pair in bootconfig ucode plymouth lvm luks multipath mdadm iscsi sshfs:sshfsroot smartcard:smart-card zfs; do
-		flag="${pair%:*}"
-		feature="$pair"
-		[ -n "${pair##*:*}" ] || feature="${pair#*:}"
-
-		if use $flag; then
-			continue
-		fi
-
-		[ ! -d "$projdir/guess/$feature"    ] || rm -vrf -- "$projdir/guess/$feature"
-		[ ! -d "$libexec/features/$feature" ] || rm -vrf -- "$libexec/features/$feature"
-		rm -vr -- "$projdir/features/$feature"
-	done
-
 	exeinto /usr/lib/kernel/install.d
 	# This module is based on 50-dracut.install script from
 	# sys-kernel/dracut-060_pre20240104-r3 package.
@@ -128,4 +95,26 @@ src_install() {
 
 	exeinto /etc/kernel/preinst.d
 	newexe "${FILESDIR}"/installkernel-make-initrd-v2.install 50-make-initrd.install
+}
+
+pkg_postinst() {
+	optfeature_header "For underlying volume support:"
+	optfeature "LVM2 support" sys-fs/lvm2[lvm]
+	optfeature "Software RAID support" sys-fs/mdadm
+	optfeature "LUKS support" sys-fs/cryptsetup
+	optfeature "Multipath support" sys-fs/multipath-tools
+	optfeature "iSCSI support" sys-block/open-iscsi
+	optfeature "sshfs support" net-fs/sshfs
+	optfeature "ZFS support" sys-fs/zfs
+
+	optfeature_header "For CPU microcode support:"
+	optfeature "Inter microcode support" \
+		sys-apps/iucode_tool sys-firmware/intel-microcode
+	optfeature "AMD microcode support" sys-kernel/linux-firmware
+
+	optfeature_header "For misc feature support:"
+	optfeature "Extra Boot Config support" dev-util/bootconfig
+	optfeature "Plymouth support" sys-boot/plymouth
+	optfeature "SmartCard support" \
+		dev-libs/opensc sys-apps/pcsc-lite sys-apps/pcsc-tools
 }
