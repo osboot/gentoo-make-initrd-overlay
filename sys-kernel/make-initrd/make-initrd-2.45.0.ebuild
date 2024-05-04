@@ -32,6 +32,7 @@ DEPEND="
 	sys-apps/util-linux
 	dev-build/make
 	dev-libs/elfutils
+	virtual/libcrypt:=
 	virtual/udev
 	net-libs/libtirpc
 	zlib? ( sys-libs/zlib )

@@ -33,6 +33,7 @@ DEPEND="
 	sys-apps/grep
 	sys-apps/kmod
 	sys-apps/util-linux
+	virtual/libcrypt:=
 	virtual/udev
 	bootconfig? ( dev-util/bootconfig )
 	bzip2? ( app-arch/bzip2 )
