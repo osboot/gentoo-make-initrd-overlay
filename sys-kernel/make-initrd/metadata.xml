@@ -9,16 +9,4 @@
 	<upstream>
 		<remote-id type="github">osboot/make-initrd</remote-id>
 	</upstream>
-	<use>
-		<flag name="bootconfig">Use <pkg>dev-util/bootconfig</pkg> to support bootconfig</flag>
-		<flag name="iscsi">Use <pkg>sys-block/open-iscsi</pkg> to support iscsi</flag>
-		<flag name="luks">Use <pkg>sys-fs/cryptsetup</pkg> to support luks-encrypted rootfs</flag>
-		<flag name="lvm">Use <pkg>sys-fs/lvm2</pkg> to support LVM-based rootfs</flag>
-		<flag name="mdadm">Use <pkg>sys-fs/mdadm</pkg> to support MD-based rootfs</flag>
-		<flag name="multipath">Use <pkg>sys-fs/multipath-tools</pkg> to support multipath-based rootfs</flag>
-		<flag name="sshfs">Use <pkg>net-fs/sshfs</pkg> to support sshfs-based rootfs</flag>
-		<flag name="plymouth">Use <pkg>sys-boot/plymouth</pkg> to support graphical boot splash</flag>
-		<flag name="ucode">Use <pkg>sys-kernel/linux-firmware</pkg> and <pkg>sys-firmware/intel-microcode</pkg> to update CPU microcode</flag>
-		<flag name="zfs">Use <pkg>sys-fs/zfs</pkg> to support ZFS-based rootfs</flag>
-	</use>
 </pkgmetadata>
