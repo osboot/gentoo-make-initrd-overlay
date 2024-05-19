@@ -108,13 +108,13 @@ pkg_postinst() {
 	optfeature "ZFS support" sys-fs/zfs
 
 	optfeature_header "For CPU microcode support:"
-	optfeature "Inter microcode support" \
-		sys-apps/iucode_tool sys-firmware/intel-microcode
+	optfeature "Intel microcode support" \
+		"sys-apps/iucode_tool sys-firmware/intel-microcode"
 	optfeature "AMD microcode support" sys-kernel/linux-firmware
 
 	optfeature_header "For misc feature support:"
 	optfeature "Extra Boot Config support" dev-util/bootconfig
 	optfeature "Plymouth support" sys-boot/plymouth
 	optfeature "SmartCard support" \
-		dev-libs/opensc sys-apps/pcsc-lite sys-apps/pcsc-tools
+		"dev-libs/opensc sys-apps/pcsc-lite sys-apps/pcsc-tools"
 }
