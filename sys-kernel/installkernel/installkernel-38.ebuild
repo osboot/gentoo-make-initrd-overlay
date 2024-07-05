@@ -16,7 +16,7 @@ S="${WORKDIR}/${PN}-gentoo-${PV}"
 
 LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 IUSE="dracut make-initrd efistub grub refind systemd systemd-boot uki ukify"
 REQUIRED_USE="
 	systemd-boot? ( systemd )
