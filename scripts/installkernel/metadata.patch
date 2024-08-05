@@ -3,7 +3,7 @@
 @@ -7,6 +7,7 @@
  	</maintainer>
  	<use>
- 		<flag name="dracut">Generate an initrd or UKI on each kernel installation</flag>
+ 		<flag name="dracut">Generate an initramfs or UKI on each kernel installation</flag>
 +		<flag name="make-initrd">Use <pkg>sys-kernel/make-initrd</pkg> to generate initrd</flag>
  		<flag name="efistub">EXPERIMENTAL: Update UEFI configuration on each kernel installation</flag>
  		<flag name="grub">Re-generate grub.cfg on each kernel installation, used grub.cfg is overridable with GRUB_CFG env var</flag>
