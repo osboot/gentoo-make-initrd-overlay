@@ -19,7 +19,7 @@ fi
 
 LICENSE="GPL-3+"
 SLOT="0"
-IUSE="+zlib bzip2 lzma zstd +man +json-c"
+IUSE="+zlib bzip2 lzma zstd +man +elf-metadata"
 
 DEPEND="
 	app-alternatives/cpio
@@ -40,7 +40,7 @@ DEPEND="
 	man? ( app-text/scdoc )
 	zlib? ( sys-libs/zlib )
 	zstd? ( app-arch/zstd )
-	json-c? ( dev-libs/json-c )
+	elf-metadata? ( dev-libs/json-c )
 "
 RDEPEND="${DEPEND}"
 
@@ -72,7 +72,7 @@ src_configure() {
 		--with-bzip2=$(usex bzip2) \
 		--with-lzma=$(usex lzma) \
 		--with-zstd=$(usex zstd) \
-		--with-json-c=$(usex json-c) \
+		--with-json-c=$(usex elf-metadata) \
 		$(usex man --with-scdoc --without-scdoc) \
 		#
 }

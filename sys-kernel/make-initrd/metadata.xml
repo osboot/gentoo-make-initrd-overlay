@@ -6,6 +6,10 @@
 		<email>gladkov.alexey@gmail.com</email>
 		<description>Upstream</description>
 	</maintainer>
+	<use>
+		<flag name="json-c">Build with <pkg>dev-libs/json-c</pkg> to add support for ELF dlopen metadata</flag>
+		<flag name="elf-metadata">Support ELF dlopen metadata with <pkg>dev-libs/json-c</pkg></flag>
+	</use>
 	<upstream>
 		<remote-id type="github">osboot/make-initrd</remote-id>
 	</upstream>
