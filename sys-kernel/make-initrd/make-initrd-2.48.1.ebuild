@@ -110,7 +110,7 @@ pkg_postinst() {
 	optfeature "ZFS support" sys-fs/zfs
 
 	optfeature_header "For CPU microcode support:"
-	optfeature "Inter microcode support" \
+	optfeature "Intel microcode support" \
 		sys-apps/iucode_tool sys-firmware/intel-microcode
 	optfeature "AMD microcode support" sys-kernel/linux-firmware
 
