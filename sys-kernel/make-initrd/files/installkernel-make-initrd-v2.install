@@ -47,8 +47,8 @@ main() {
 		die "could't find kernel config (tried $kconfig_lib)"
 	fi
 
-	# To get rid of portage FEATURES.
-	unset FEATURES
+	# To get rid of portage FEATURES and eclass variables.
+	unset FEATURES ARCH
 
 	make-initrd \
 		--verbose \
