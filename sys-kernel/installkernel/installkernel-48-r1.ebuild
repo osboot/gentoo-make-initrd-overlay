@@ -22,7 +22,7 @@ REQUIRED_USE="
 	?? ( efistub grub systemd-boot )
 	refind? ( !systemd-boot !grub )
 	systemd-boot? ( systemd )
-	make-initrd? ( !uki !ukify )
+	make-initrd? ( !ukify )
 	ukify? ( uki )
 	?? ( dracut ugrd make-initrd )
 "
@@ -59,7 +59,16 @@ RDEPEND="
 		systemd? ( >=app-emulation/virt-firmware-24.2_p20240315-r2 )
 		!systemd? ( sys-boot/uefi-mkconfig )
 	)
-	make-initrd? ( sys-kernel/make-initrd )
+	make-initrd? (
+		sys-kernel/make-initrd
+		uki? (
+			>=sys-kernel/make-initrd-2.50.0
+			|| (
+				sys-apps/systemd[boot(-)]
+				sys-apps/systemd-utils[boot(-)]
+			)
+		)
+	)
 	grub? ( sys-boot/grub )
 	refind? ( sys-boot/refind )
 	systemd? (
@@ -158,6 +167,11 @@ src_install() {
 		echo "initrd_generator=ugrd" >> "${T}/install.conf" || die
 	elif use make-initrd; then
 		echo "initrd_generator=make-initrd" >> "${T}/install.conf" || die
+		if use uki; then
+			echo "uki_generator=make-initrd" >> "${T}/install.conf" || die
+		else
+			echo "uki_generator=none" >> "${T}/install.conf" || die
+		fi
 	else
 		echo "initrd_generator=none" >> "${T}/install.conf" || die
 	fi
@@ -165,7 +179,7 @@ src_install() {
 	if use ukify; then
 		echo "uki_generator=ukify" >> "${T}/install.conf" || die
 	else
-		if ! use dracut; then
+		if ! use dracut && ! use make-initrd; then
 			echo "uki_generator=none" >> "${T}/install.conf" || die
 		fi
 	fi
