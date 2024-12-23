@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+# Copyright 2023-2024  Gentoo Authors
+# Copyright 2024  Gabi Falk <gabifalk@gmx.com>
+#
+# This script is installed by sys-kernel/make-initrd, it is executed by the
+# traditional installkernel, NOT by systemd's kernel-install. I.e. this plugin
+# is run when the systemd USE flag is disabled or SYSTEMD_KERNEL_INSTALL=0 is
+# set in the environment.
+
+ver=${1}
+img=${2}
+basedir=$(dirname "${img}")
+initrd="${basedir}/initrd"
+uki="${basedir}/uki.efi"
+tmp="${basedir}/make-initrd-tmp"
+
+# familiar helpers, we intentionally don't use Gentoo functions.sh
+die() {
+	echo -e " ${NOCOLOR-\e[1;31m*\e[0m }${*}" >&2
+	exit 1
+}
+
+einfo() {
+	echo -e " ${NOCOLOR-\e[1;32m*\e[0m }${*}"
+}
+
+ewarn() {
+	echo -e " ${NOCOLOR-\e[1;33m*\e[0m }${*}"
+}
+
+main() {
+	# re-define for subst to work
+	[[ -n ${NOCOLOR+yes} ]] && NOCOLOR=
+
+	if [[ -n "${INSTALLKERNEL_INITRD_GENERATOR}" &&
+		${INSTALLKERNEL_INITRD_GENERATOR} != make-initrd ]]; then
+			# We are not selected as the initrd generator
+			einfo "initrd_generator=${INSTALLKERNEL_INITRD_GENERATOR}, skipping make-initrd"
+			exit 0
+	fi
+
+	# Do nothing if somehow make-initrd is not installed.
+	[[ -x $(command -v make-initrd) ]] || { ewarn "make-initrd is not installed, not generating an initramfs" && exit 0; }
+
+	[[ ${EUID} -eq 0 ]] || die "Please run this script as root"
+
+	kconfig=
+	kconfig_lib=/lib/modules/"$ver"/source/.config
+
+	if [ -s "$kconfig_lib" ]; then
+		kconfig="$kconfig_lib"
+	else
+		die "could't find kernel config (tried $kconfig_lib)"
+	fi
+
+	if [[ ${INSTALLKERNEL_UKI_GENERATOR} == make-initrd ]]; then
+		einfo "Using make-initrd as the initramfs and UKI generator..."
+		UKI=1
+		out="${uki}"
+	elif [[ ${INSTALLKERNEL_INITRD_GENERATOR} == make-initrd ]]; then
+		einfo "Using make-initrd as the initramfs generator..."
+		UKI=
+		out="${initrd}"
+	else
+		einfo "No install.conf preference set, falling back to initrd.mk..."
+		out="${tmp}"
+	fi
+
+	# To get rid of portage variables.
+	unset ARCH FEATURES
+
+	make-initrd \
+		--verbose \
+		--kernel "$ver" \
+		${kconfig:+KERNEL_CONFIG="$kconfig"} \
+		${UKI+UKI="$UKI"} \
+		IMAGEFILE="$out" ||
+		die "Failed to generate initramfs"
+
+	# Fallback path for if we don't know if we generated an initramfs or
+	# UKI. If make-initrd is used in UKI=1 mode, initrd will actually
+	# be a combined kernel+initramfs UEFI executable. We can easily
+	# recognize it by PE magic (vs cpio for a regular initramfs)
+	if [[ -s ${tmp} ]]; then
+		read -rn 2 magic <"${tmp}" || die "Cannot read ${tmp}"
+		if [[ ${magic} == MZ ]]; then
+			einfo "Combined UEFI kernel+initramfs executable found"
+			mv "${tmp}" "${uki}" || die "Failed to rename UKI"
+		else
+			einfo "Plain initramfs image found"
+			mv "${tmp}" "${initrd}" || die "Failed to rename initramfs"
+		fi
+	fi
+}
+
+main

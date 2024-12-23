@@ -93,10 +93,10 @@ src_install() {
 	exeinto /usr/lib/kernel/install.d
 	# This module is based on 50-dracut.install script from
 	# sys-kernel/dracut-060_pre20240104-r3 package.
-	newexe "${FILESDIR}"/systemd-make-initrd-v2.install 50-make-initrd.install
+	newexe "${FILESDIR}"/systemd-make-initrd-v3.install 50-make-initrd.install
 
 	exeinto /etc/kernel/preinst.d
-	newexe "${FILESDIR}"/installkernel-make-initrd-v2.install 50-make-initrd.install
+	newexe "${FILESDIR}"/installkernel-make-initrd-v3.install 50-make-initrd.install
 }
 
 pkg_postinst() {
@@ -113,6 +113,9 @@ pkg_postinst() {
 	optfeature "Intel microcode support" \
 		sys-apps/iucode_tool sys-firmware/intel-microcode
 	optfeature "AMD microcode support" sys-kernel/linux-firmware
+
+	optfeature "UKI (Unified Kernel Images) support" \
+		"sys-apps/systemd[boot]" "sys-apps/systemd-utils[boot]"
 
 	optfeature_header "For misc feature support:"
 	optfeature "Extra Boot Config support" dev-util/bootconfig
