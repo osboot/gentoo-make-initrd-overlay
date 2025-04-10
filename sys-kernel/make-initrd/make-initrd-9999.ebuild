@@ -14,7 +14,7 @@ if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="https://github.com/osboot/${PN}.git"
 else
 	SRC_URI="https://github.com/osboot/make-initrd/releases/download/${PV}/${P}.tar.xz"
-	KEYWORDS="~amd64"
+	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~loong ~mips ~ppc ~ppc64 ~riscv ~sparc ~x86"
 fi
 
 LICENSE="GPL-3+"
