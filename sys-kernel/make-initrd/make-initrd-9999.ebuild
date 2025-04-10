@@ -1,5 +1,5 @@
 # Copyright 2023  Alexey Gladkov <gladkov.alexey@gmail.com>
-# Copyright 2024  Gabi Falk <gabifalk@gmx.com>
+# Copyright 2024-2025  Gabi Falk <gabifalk@gmx.com>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 EAPI=8
@@ -41,6 +41,7 @@ DEPEND="
 	zlib? ( sys-libs/zlib )
 	zstd? ( app-arch/zstd )
 	elf-metadata? ( dev-libs/json-c )
+	elibc_musl? ( sys-libs/fts-standalone )
 "
 RDEPEND="${DEPEND}"
 
@@ -55,6 +56,12 @@ BDEPEND="
 
 src_prepare() {
 	default
+	if use elibc_musl; then
+		# Some busybox features are broken with musl.
+		# See https://wiki.musl-libc.org/building-busybox
+		sed 's/^CONFIG_FEATURE_VI_REGEX_SEARCH=y/# CONFIG_FEATURE_VI_REGEX_SEARCH is not set/' \
+			-i external/busybox/config
+	fi
 
 	eautoreconf
 }
